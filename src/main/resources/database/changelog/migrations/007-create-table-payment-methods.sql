@@ -1,0 +1,28 @@
+CREATE TABLE IF NOT EXISTS PAYMENT_METHODS (
+    ID          SERIAL PRIMARY KEY,
+    NAME        VARCHAR(100) NOT NULL,
+    DESCRIPTION TEXT
+);
+
+COMMENT ON TABLE PAYMENT_METHODS IS 'Forma de pagamento';
+COMMENT ON COLUMN PAYMENT_METHODS.ID IS 'Id da forma de pagamento';
+COMMENT ON COLUMN PAYMENT_METHODS.NAME IS 'Nome da forma de pagamento';
+COMMENT ON COLUMN PAYMENT_METHODS.DESCRIPTION IS 'Descrição da forma de pagamento';
+
+ALTER TABLE PAYMENT_METHODS
+ADD CONSTRAINT UQ_PAYMENT_METHODS_NAME UNIQUE (NAME);
+
+INSERT INTO PAYMENT_METHODS (NAME, DESCRIPTION)
+VALUES ('Pix', 'Despesa e/ou Receita paga com PIX');
+
+INSERT INTO PAYMENT_METHODS (NAME, DESCRIPTION)
+VALUES ('Cartão de Crédito', 'Despesa e/ou Receita paga com cartão de crédito');
+
+INSERT INTO PAYMENT_METHODS (NAME, DESCRIPTION)
+VALUES ('Boleto', 'Despesa e/ou Receita paga com boleto');
+
+INSERT INTO PAYMENT_METHODS (NAME, DESCRIPTION)
+VALUES ('Dinheiro', 'Despesa e/ou Receita paga com dinheiro');
+
+INSERT INTO PAYMENT_METHODS (NAME, DESCRIPTION)
+VALUES ('Cheque', 'Despesa e/ou Receita paga com cheque');

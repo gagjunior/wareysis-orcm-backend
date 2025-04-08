@@ -1,0 +1,65 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Gilberto_Junior
+      changes:
+        - sqlFile:
+            path: migrations/001-create-table-user.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: 2
+      author: Gilberto_Junior
+      changes:
+        - sqlFile:
+            path: migrations/002-create-table-expense-categories.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: 3
+      author: Gilberto_Junior
+      changes:
+        - sqlFile:
+            path: migrations/003-create-table-income-categories.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: 4
+      author: Gilberto_Junior
+      changes:
+        - sqlFile:
+            path: migrations/004-create-table-entry-type.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: 5
+      author: Gilberto_Junior
+      changes:
+        - sqlFile:
+            path: migrations/005-create-table-status-type.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: 6
+      author: Gilberto_Junior
+      changes:
+        - sqlFile:
+            path: migrations/006-create-table-payment-type.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: 7
+      author: Gilberto_Junior
+      changes:
+        - sqlFile:
+            path: migrations/007-create-table-payment-methods.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: 8
+      author: Gilberto_Junior
+      changes:
+        - sqlFile:
+            path: migrations/008-create-table-expense-entry.sql
+            relativeToChangelogFile: true
+
