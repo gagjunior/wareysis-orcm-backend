@@ -53,7 +53,7 @@ public class ExpenseCategoryController implements ExpenseApi {
 
     @GET
     @Path("/category/{userId}")
-    public Response findAllCategories(Long userId) {
+    public Response findAllCategories(@PathParam("userId") Long userId) {
 
         return Response.ok(categoryService.findAllByUserId(userId)).build();
     }
