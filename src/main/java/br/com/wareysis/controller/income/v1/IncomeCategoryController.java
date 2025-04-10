@@ -3,6 +3,7 @@ package br.com.wareysis.controller.income.v1;
 import br.com.wareysis.domain.category.CategoryId;
 import br.com.wareysis.dto.CategoryDto;
 import br.com.wareysis.service.income.IncomeCategoryService;
+
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -50,7 +51,7 @@ public class IncomeCategoryController implements IncomeApi {
 
     @GET
     @Path("/category/{userId}")
-    public Response findAllCategories(Long userId) {
+    public Response findAllCategories(@PathParam("userId") Long userId) {
 
         return Response.ok(categoryService.findAllByUserId(userId)).build();
     }
