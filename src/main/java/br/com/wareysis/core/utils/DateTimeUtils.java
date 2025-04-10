@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DateTimeUtils {
 
-    public static Timestamp dhUpdate(){
+    public static Timestamp dhUpdate() {
+
         return Timestamp.valueOf(LocalDateTime.now());
     }
 
