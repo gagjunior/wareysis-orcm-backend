@@ -1,11 +1,7 @@
 package br.com.wareysis.domain.category;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import br.com.wareysis.core.utils.Constants;
+import java.time.LocalDateTime;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -30,11 +26,9 @@ public abstract class AbstractCategory extends PanacheEntityBase implements Seri
     private String description;
 
     @Column(name = "create_time")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = Constants.TIME_ZONE_BRASIL)
-    private Timestamp createTime;
+    private LocalDateTime createTime;
 
     @Column(name = "update_time")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = Constants.TIME_ZONE_BRASIL)
-    private Timestamp updateTime;
+    private LocalDateTime updateTime;
 
 }

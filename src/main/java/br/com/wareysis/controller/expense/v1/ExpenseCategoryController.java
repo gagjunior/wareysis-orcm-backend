@@ -1,8 +1,11 @@
 package br.com.wareysis.controller.expense.v1;
 
+import org.jboss.resteasy.reactive.RestResponse.Status;
+
 import br.com.wareysis.domain.category.CategoryId;
-import br.com.wareysis.dto.CategoryRequestDto;
+import br.com.wareysis.dto.CategoryDto;
 import br.com.wareysis.service.expense.ExpenseCategoryService;
+
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -13,7 +16,6 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
-import org.jboss.resteasy.reactive.RestResponse.Status;
 
 public class ExpenseCategoryController implements ExpenseApi {
 
@@ -23,9 +25,9 @@ public class ExpenseCategoryController implements ExpenseApi {
     @POST
     @Transactional
     @Path("/category")
-    public Response create(@Valid CategoryRequestDto categoryRequestDto) {
+    public Response create(@Valid CategoryDto categoryDto) {
 
-        return Response.status(Status.CREATED).entity(categoryService.create(categoryRequestDto)).build();
+        return Response.status(Status.CREATED).entity(categoryService.create(categoryDto)).build();
     }
 
     @DELETE
@@ -43,9 +45,9 @@ public class ExpenseCategoryController implements ExpenseApi {
     @PUT
     @Path("/category")
     @Transactional
-    public Response update(@Valid CategoryRequestDto categoryRequestDto) {
+    public Response update(@Valid CategoryDto categoryDto) {
 
-        categoryService.update(categoryRequestDto);
+        categoryService.update(categoryDto);
         return Response.status(Status.NO_CONTENT).build();
     }
 

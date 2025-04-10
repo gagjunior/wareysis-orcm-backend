@@ -1,10 +1,10 @@
-package br.com.wareysis.core.messages;
-
-import jakarta.enterprise.context.ApplicationScoped;
+package br.com.wareysis.core.service.messages;
 
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
+
+import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class MessageService {

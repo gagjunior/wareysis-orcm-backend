@@ -1,21 +1,21 @@
 package br.com.wareysis.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
-import br.com.wareysis.core.messages.MessageService;
-import br.com.wareysis.core.utils.DateTimeUtils;
+import br.com.wareysis.core.service.AbstractService;
 import br.com.wareysis.domain.category.AbstractCategory;
 import br.com.wareysis.domain.category.CategoryId;
-import br.com.wareysis.dto.CategoryRequestDto;
-import br.com.wareysis.exception.CategoryException;
+import br.com.wareysis.dto.CategoryDto;
+import br.com.wareysis.exception.category.CategoryException;
 import br.com.wareysis.mapper.GenericCategoryMapper;
 import br.com.wareysis.repository.AbstractCategoryRepository;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
 
-public abstract class AbstractCategoryService<T extends AbstractCategory> {
+public abstract class AbstractCategoryService<T extends AbstractCategory> extends AbstractService {
 
     @Inject
     AbstractCategoryRepository<T> repository;
@@ -23,17 +23,14 @@ public abstract class AbstractCategoryService<T extends AbstractCategory> {
     @Inject
     GenericCategoryMapper<T> mapper;
 
-    @Inject
-    MessageService messageService;
-
-    public CategoryRequestDto create(CategoryRequestDto dto) {
+    public CategoryDto create(CategoryDto dto) {
 
         validateCreateCategory(new CategoryId(dto.userId(), dto.name()));
 
         T category = mapper.toEntity(dto);
 
-        category.setCreateTime(DateTimeUtils.dhUpdate());
-        category.setUpdateTime(DateTimeUtils.dhUpdate());
+        category.setCreateTime(LocalDateTime.now());
+        category.setUpdateTime(LocalDateTime.now());
 
         repository.persist(category);
         return dto;
@@ -48,7 +45,7 @@ public abstract class AbstractCategoryService<T extends AbstractCategory> {
         repository.delete(category);
     }
 
-    public void update(CategoryRequestDto dto) {
+    public void update(CategoryDto dto) {
 
         CategoryId categoryId = new CategoryId(dto.userId(), dto.name());
 
@@ -56,16 +53,16 @@ public abstract class AbstractCategoryService<T extends AbstractCategory> {
 
         T oldCategory = repository.findById(categoryId);
         oldCategory.setDescription(dto.description());
-        oldCategory.setUpdateTime(DateTimeUtils.dhUpdate());
+        oldCategory.setUpdateTime(LocalDateTime.now());
 
     }
 
-    public List<CategoryRequestDto> findAllByUserId(Long userId) {
+    public List<CategoryDto> findAllByUserId(Long userId) {
 
         return repository.findAllByUserId(userId).parallelStream().map(mapper::toDto).toList();
     }
 
-    public List<CategoryRequestDto> findAllByName(CategoryId categoryId) {
+    public List<CategoryDto> findAllByName(CategoryId categoryId) {
 
         return repository.findAllByName(categoryId).parallelStream().map(mapper::toDto).toList();
     }
