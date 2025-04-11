@@ -1,5 +1,7 @@
 package br.com.wareysis.domain.expense;
 
+import java.io.Serializable;
+
 import br.com.wareysis.domain.category.AbstractCategory;
 
 import lombok.AllArgsConstructor;
@@ -16,6 +18,6 @@ import jakarta.persistence.Table;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "expense_category")
-public class ExpenseCategory extends AbstractCategory {
+public class ExpenseCategory extends AbstractCategory implements Serializable {
 
 }

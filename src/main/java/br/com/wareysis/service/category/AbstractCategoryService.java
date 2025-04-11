@@ -1,4 +1,4 @@
-package br.com.wareysis.service;
+package br.com.wareysis.service.category;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -11,6 +11,7 @@ import br.com.wareysis.dto.CategoryDto;
 import br.com.wareysis.exception.category.CategoryException;
 import br.com.wareysis.mapper.GenericCategoryMapper;
 import br.com.wareysis.repository.AbstractCategoryRepository;
+import br.com.wareysis.service.user.UserService;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
@@ -22,6 +23,9 @@ public abstract class AbstractCategoryService<T extends AbstractCategory> extend
 
     @Inject
     GenericCategoryMapper<T> mapper;
+
+    @Inject
+    UserService userService;
 
     public CategoryDto create(CategoryDto dto) {
 
@@ -59,10 +63,14 @@ public abstract class AbstractCategoryService<T extends AbstractCategory> extend
 
     public List<CategoryDto> findAllByUserId(Long userId) {
 
+        userService.validateUserExists(userId);
+
         return repository.findAllByUserId(userId).parallelStream().map(mapper::toDto).toList();
     }
 
     public List<CategoryDto> findAllByName(CategoryId categoryId) {
+
+        userService.validateUserExists(categoryId.getUserId());
 
         return repository.findAllByName(categoryId).parallelStream().map(mapper::toDto).toList();
     }
@@ -79,7 +87,10 @@ public abstract class AbstractCategoryService<T extends AbstractCategory> extend
 
     private void validateCategory(CategoryId categoryId) {
 
+        userService.validateUserExists(categoryId.getUserId());
+
         T category = repository.findById(categoryId);
+
         if (Objects.isNull(category)) {
             throw new CategoryException(messageService.getMessage("category.notFound"), Response.Status.NOT_FOUND);
         }

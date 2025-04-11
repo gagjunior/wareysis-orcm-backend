@@ -6,6 +6,7 @@ import br.com.wareysis.domain.category.CategoryId;
 import br.com.wareysis.dto.CategoryDto;
 import br.com.wareysis.service.expense.ExpenseCategoryService;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -17,6 +18,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
 
+@ApplicationScoped
 public class ExpenseCategoryController implements ExpenseApi {
 
     @Inject

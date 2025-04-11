@@ -1,7 +1,7 @@
 package br.com.wareysis.service.expense;
 
 import br.com.wareysis.domain.expense.ExpenseCategory;
-import br.com.wareysis.service.AbstractCategoryService;
+import br.com.wareysis.service.category.AbstractCategoryService;
 
 import jakarta.enterprise.context.ApplicationScoped;
 
