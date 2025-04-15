@@ -1,4 +1,4 @@
-package br.com.wareysis.dto;
+package br.com.wareysis.dto.category;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

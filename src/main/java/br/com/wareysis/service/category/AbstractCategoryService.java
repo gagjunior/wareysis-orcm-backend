@@ -7,13 +7,14 @@ import java.util.Objects;
 import br.com.wareysis.core.service.AbstractService;
 import br.com.wareysis.domain.category.AbstractCategory;
 import br.com.wareysis.domain.category.CategoryId;
-import br.com.wareysis.dto.CategoryDto;
+import br.com.wareysis.dto.category.CategoryDto;
 import br.com.wareysis.exception.category.CategoryException;
 import br.com.wareysis.mapper.GenericCategoryMapper;
 import br.com.wareysis.repository.AbstractCategoryRepository;
 import br.com.wareysis.service.user.UserService;
 
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
 
 public abstract class AbstractCategoryService<T extends AbstractCategory> extends AbstractService {
@@ -27,6 +28,7 @@ public abstract class AbstractCategoryService<T extends AbstractCategory> extend
     @Inject
     UserService userService;
 
+    @Transactional
     public CategoryDto create(CategoryDto dto) {
 
         validateCreateCategory(new CategoryId(dto.userId(), dto.name()));
@@ -40,6 +42,7 @@ public abstract class AbstractCategoryService<T extends AbstractCategory> extend
         return dto;
     }
 
+    @Transactional
     public void delete(CategoryId categoryId) {
 
         validateCategory(categoryId);
@@ -49,6 +52,7 @@ public abstract class AbstractCategoryService<T extends AbstractCategory> extend
         repository.delete(category);
     }
 
+    @Transactional
     public void update(CategoryDto dto) {
 
         CategoryId categoryId = new CategoryId(dto.userId(), dto.name());
@@ -83,6 +87,17 @@ public abstract class AbstractCategoryService<T extends AbstractCategory> extend
             throw new CategoryException(messageService.getMessage("category.limit.exceeded"), Response.Status.PRECONDITION_FAILED);
         }
 
+    }
+
+    public void validateCategoryExistsByUserAndName(CategoryId categoryId) {
+
+        userService.validateUserExists(categoryId.getUserId());
+
+        List<T> categories = repository.findAllByName(categoryId);
+
+        if (categories.isEmpty()) {
+            throw new CategoryException(messageService.getMessage("category.notFound"), Response.Status.NOT_FOUND);
+        }
     }
 
     private void validateCategory(CategoryId categoryId) {

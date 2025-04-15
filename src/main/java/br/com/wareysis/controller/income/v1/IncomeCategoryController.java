@@ -1,7 +1,7 @@
 package br.com.wareysis.controller.income.v1;
 
 import br.com.wareysis.domain.category.CategoryId;
-import br.com.wareysis.dto.CategoryDto;
+import br.com.wareysis.dto.category.CategoryDto;
 import br.com.wareysis.service.income.IncomeCategoryService;
 
 import jakarta.inject.Inject;

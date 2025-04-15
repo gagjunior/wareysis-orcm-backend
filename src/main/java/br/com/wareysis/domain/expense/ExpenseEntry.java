@@ -24,8 +24,6 @@ public class ExpenseEntry extends AbstractDomainBase implements Serializable {
     @EmbeddedId
     ExpenseEntryId id;
 
-    private String name;
-
     @Column(name = "category_name")
     private String categoryName;
 

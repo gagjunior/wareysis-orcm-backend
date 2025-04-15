@@ -10,10 +10,12 @@ import br.com.wareysis.dto.user.CreateUserDto;
 import br.com.wareysis.dto.user.UpdateUserDto;
 import br.com.wareysis.exception.user.UserException;
 import br.com.wareysis.mapper.user.UserMapper;
+import br.com.wareysis.repository.user.UserRepository;
 import br.com.wareysis.service.firebase.user.FirebaseUserService;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -24,8 +26,12 @@ public class UserService extends AbstractService {
     FirebaseUserService firebaseUserService;
 
     @Inject
+    UserRepository userRepository;
+
+    @Inject
     UserMapper userMapper;
 
+    @Transactional
     public User createUser(CreateUserDto createUserDto) {
 
         if (Objects.isNull(createUserDto)) {
@@ -41,6 +47,7 @@ public class UserService extends AbstractService {
         return user;
     }
 
+    @Transactional
     public User updateUser(Long userId, UpdateUserDto updateUserDto) {
 
         if (userId == 1L) {
@@ -51,17 +58,25 @@ public class UserService extends AbstractService {
             throw new UserException(messageService.getMessage("user.update.dto.null"), Response.Status.BAD_REQUEST);
         }
 
-        User user = User.findById(userId);
-
-        if (Objects.isNull(user)) {
-            throw new UserException(messageService.getMessage("user.not.found"), Response.Status.NOT_FOUND);
-        }
+        User user = getUserOrThrow(userId);
 
         firebaseUserService.updateUserInFirebase(updateUserDto, user.getFirebaseUid());
         userMapper.updateFromDto(user, updateUserDto);
 
         return user;
 
+    }
+
+    public void validateUserExists(Long userId) {
+
+        getUserOrThrow(userId);
+
+    }
+
+    private User getUserOrThrow(Long userId) {
+
+        return userRepository.findByIdOptional(userId)
+                .orElseThrow(() -> new UserException(messageService.getMessage("user.not.found"), Response.Status.NOT_FOUND));
     }
 
 }

@@ -1,6 +1,9 @@
 package br.com.wareysis.service.expense;
 
+import br.com.wareysis.domain.category.CategoryId;
 import br.com.wareysis.domain.expense.ExpenseEntry;
+import br.com.wareysis.dto.expense.ExpenseEntryDto;
+import br.com.wareysis.mapper.expense.ExpenseEntryMapper;
 import br.com.wareysis.repository.expense.ExpenseEntryRepository;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -11,24 +14,33 @@ import jakarta.persistence.EntityManager;
 public class ExpenseEntryService {
 
     @Inject
-    ExpenseEntryRepository expenseEntryRepository;
+    ExpenseEntryRepository repository;
 
     @Inject
-    EntityManager em;
+    EntityManager entityManager;
 
-    public ExpenseEntry create(ExpenseEntry expenseEntry) {
+    @Inject
+    ExpenseEntryMapper mapper;
+
+    @Inject
+    ExpenseCategoryService expenseCategoryService;
+
+    public ExpenseEntryDto create(ExpenseEntryDto dto) {
+
+        CategoryId categoryId = new CategoryId(dto.userId(), dto.categoryName());
+        expenseCategoryService.validateCategoryExistsByUserAndName(categoryId);
 
         Long nextId = nextValSequence();
-        expenseEntry.getId().setId(nextId);
+        ExpenseEntry expenseEntry = mapper.toEntity(dto, nextId);
 
-        em.persist(expenseEntry);
+        entityManager.persist(expenseEntry);
 
-        return expenseEntry;
+        return mapper.toDto(expenseEntry);
     }
 
     private Long nextValSequence() {
 
-        return ((Number) em.createNativeQuery("SELECT nextval('EXPENSE_ENTRY_ID_SEQ')").getSingleResult()).longValue();
+        return ((Number) entityManager.createNativeQuery("SELECT nextval('EXPENSE_ENTRY_ID_SEQ')").getSingleResult()).longValue();
     }
 
 }

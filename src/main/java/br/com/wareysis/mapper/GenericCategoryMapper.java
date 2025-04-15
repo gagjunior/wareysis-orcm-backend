@@ -1,7 +1,7 @@
 package br.com.wareysis.mapper;
 
 import br.com.wareysis.domain.category.AbstractCategory;
-import br.com.wareysis.dto.CategoryDto;
+import br.com.wareysis.dto.category.CategoryDto;
 
 public interface GenericCategoryMapper<T extends AbstractCategory> {
 

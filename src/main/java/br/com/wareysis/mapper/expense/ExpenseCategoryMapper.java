@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 import br.com.wareysis.domain.category.CategoryId;
 import br.com.wareysis.domain.expense.ExpenseCategory;
-import br.com.wareysis.dto.CategoryDto;
+import br.com.wareysis.dto.category.CategoryDto;
 import br.com.wareysis.mapper.GenericCategoryMapper;
 
 import jakarta.enterprise.context.ApplicationScoped;

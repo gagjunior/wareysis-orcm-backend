@@ -1,6 +1,8 @@
 package br.com.wareysis.domain.user;
 
-import java.time.LocalDateTime;
+import java.io.Serializable;
+
+import br.com.wareysis.core.domain.AbstractDomainBase;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,15 +16,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "user_registration")
-public class User extends PanacheEntityBase {
+public class User extends AbstractDomainBase implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,12 +43,6 @@ public class User extends PanacheEntityBase {
     private String photoUrl;
 
     private Boolean disabled;
-
-    @Column(name = "create_time")
-    private LocalDateTime createTime;
-
-    @Column(name = "update_time")
-    private LocalDateTime updateTime;
 
     @Column(name = "firebase_uid")
     private String firebaseUid;

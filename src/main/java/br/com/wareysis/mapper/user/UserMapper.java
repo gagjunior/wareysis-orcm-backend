@@ -1,7 +1,7 @@
 package br.com.wareysis.mapper.user;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Optional;
 
 import com.google.firebase.auth.UserRecord;
 
@@ -23,8 +23,6 @@ public class UserMapper {
         user.setPhoneNumber(userRecord.getPhoneNumber());
         user.setPhotoUrl(userRecord.getPhotoUrl());
         user.setDisabled(userRecord.isDisabled());
-        user.setCreateTime(LocalDateTime.now());
-        user.setUpdateTime(LocalDateTime.now());
         user.setFirebaseUid(userRecord.getUid());
         user.setChangePassword(false);
 
@@ -33,26 +31,30 @@ public class UserMapper {
 
     public void updateFromDto(User user, UpdateUserDto updateUserDto) {
 
-        if (Objects.nonNull(updateUserDto.email()) && !updateUserDto.email().isBlank()) {
+        if (isValid(updateUserDto.email())) {
             user.setEmail(updateUserDto.email());
         }
-        if (Objects.nonNull(updateUserDto.fullName()) && !updateUserDto.fullName().isBlank()) {
+        if (isValid(updateUserDto.fullName())) {
             user.setFullName(updateUserDto.fullName());
         }
-        if (Objects.nonNull(updateUserDto.phoneNumber()) && !updateUserDto.phoneNumber().isBlank()) {
+        if (isValid(updateUserDto.phoneNumber())) {
             user.setPhoneNumber(updateUserDto.phoneNumber());
         }
-        if (Objects.nonNull(updateUserDto.photoUrl()) && !updateUserDto.photoUrl().isBlank()) {
+        if (isValid(updateUserDto.photoUrl())) {
             user.setPhotoUrl(updateUserDto.photoUrl());
-        }
-        if (Objects.nonNull(updateUserDto.disabled())) {
-            user.setDisabled(updateUserDto.disabled());
         }
         if (Objects.nonNull(updateUserDto.changePassword())) {
             user.setChangePassword(updateUserDto.changePassword());
         }
 
-        user.setUpdateTime(LocalDateTime.now());
+        Optional.ofNullable(updateUserDto.changePassword()).ifPresent(user::setChangePassword);
+        Optional.ofNullable(updateUserDto.disabled()).ifPresent(user::setDisabled);
+
+    }
+
+    private boolean isValid(String value) {
+
+        return Objects.nonNull(value) && !value.isBlank();
     }
 
 }
