@@ -16,6 +16,7 @@ import br.com.wareysis.service.user.UserService;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 public abstract class AbstractCategoryService<T extends AbstractCategory> extends AbstractService {
 
@@ -34,9 +35,6 @@ public abstract class AbstractCategoryService<T extends AbstractCategory> extend
         validateCreateCategory(new CategoryId(dto.userId(), dto.name()));
 
         T category = mapper.toEntity(dto);
-
-        category.setCreateTime(LocalDateTime.now());
-        category.setUpdateTime(LocalDateTime.now());
 
         repository.persist(category);
         return dto;
@@ -81,6 +79,12 @@ public abstract class AbstractCategoryService<T extends AbstractCategory> extend
 
     private void validateCreateCategory(CategoryId categoryId) {
 
+        userService.validateUserExists(categoryId.getUserId());
+
+        if (isCategoryPresent(categoryId)) {
+            throw new CategoryException(messageService.getMessage("category.already.exists", categoryId.getName()), Status.BAD_REQUEST);
+        }
+
         int qtdCategories = repository.countCategoriesByUserId(categoryId.getUserId()).intValue();
 
         if (qtdCategories >= 5) {
@@ -89,24 +93,18 @@ public abstract class AbstractCategoryService<T extends AbstractCategory> extend
 
     }
 
-    public void validateCategoryExistsByUserAndName(CategoryId categoryId) {
+    private boolean isCategoryPresent(CategoryId categoryId) {
 
-        userService.validateUserExists(categoryId.getUserId());
+        List<T> categoryList = repository.findAllByName(categoryId);
 
-        List<T> categories = repository.findAllByName(categoryId);
-
-        if (categories.isEmpty()) {
-            throw new CategoryException(messageService.getMessage("category.notFound"), Response.Status.NOT_FOUND);
-        }
+        return Objects.nonNull(categoryList) && !categoryList.isEmpty();
     }
 
-    private void validateCategory(CategoryId categoryId) {
+    public void validateCategory(CategoryId categoryId) {
 
         userService.validateUserExists(categoryId.getUserId());
 
-        T category = repository.findById(categoryId);
-
-        if (Objects.isNull(category)) {
+        if (!isCategoryPresent(categoryId)) {
             throw new CategoryException(messageService.getMessage("category.notFound"), Response.Status.NOT_FOUND);
         }
     }

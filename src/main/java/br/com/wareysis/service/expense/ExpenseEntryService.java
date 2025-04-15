@@ -9,6 +9,7 @@ import br.com.wareysis.repository.expense.ExpenseEntryRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
 @ApplicationScoped
 public class ExpenseEntryService {
@@ -25,10 +26,10 @@ public class ExpenseEntryService {
     @Inject
     ExpenseCategoryService expenseCategoryService;
 
+    @Transactional
     public ExpenseEntryDto create(ExpenseEntryDto dto) {
 
-        CategoryId categoryId = new CategoryId(dto.userId(), dto.categoryName());
-        expenseCategoryService.validateCategoryExistsByUserAndName(categoryId);
+        expenseCategoryService.validateCategory(new CategoryId(dto.userId(), dto.categoryName()));
 
         Long nextId = nextValSequence();
         ExpenseEntry expenseEntry = mapper.toEntity(dto, nextId);

@@ -4,7 +4,6 @@ import br.com.wareysis.dto.expense.ExpenseEntryDto;
 import br.com.wareysis.service.expense.ExpenseEntryService;
 
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
@@ -22,7 +21,6 @@ public class ExpenseEntryController {
     ExpenseEntryService expenseEntryService;
 
     @POST
-    @Transactional
     public Response create(@Valid ExpenseEntryDto dto) {
 
         return Response.status(Response.Status.CREATED).entity(expenseEntryService.create(dto)).build();

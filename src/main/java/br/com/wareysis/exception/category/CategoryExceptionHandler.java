@@ -1,21 +1,10 @@
 package br.com.wareysis.exception.category;
 
-import br.com.wareysis.exception.ErrorResponse;
+import br.com.wareysis.exception.AbstractExceptionHandler;
 
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 
 @Provider
-public class CategoryExceptionHandler implements ExceptionMapper<CategoryException> {
+public class CategoryExceptionHandler extends AbstractExceptionHandler<CategoryException> {
 
-    @Override
-    public Response toResponse(CategoryException exception) {
-
-        return Response.status(exception.getStatus())
-                .entity(new ErrorResponse(exception.getStatus(), exception.getClass().getSimpleName(), exception.getMessage()))
-                .type(MediaType.APPLICATION_JSON)
-                .build();
-    }
 }
