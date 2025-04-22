@@ -8,13 +8,11 @@ import br.com.wareysis.domain.type.AbstractType;
 import br.com.wareysis.exception.type.TypeException;
 import br.com.wareysis.repository.type.AbstractTypeRepository;
 
-import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
 
-public class AbstractTypeService<T extends AbstractType> extends AbstractService {
+public abstract class AbstractTypeService<T extends AbstractType> extends AbstractService {
 
-    @Inject
-    AbstractTypeRepository<T> repository;
+    protected AbstractTypeRepository<T> repository;
 
     public List<T> findAllByName(String name) {
 
@@ -26,6 +24,7 @@ public class AbstractTypeService<T extends AbstractType> extends AbstractService
     }
 
     public List<T> findAll() {
+
         return repository.listAll();
     }
 
