@@ -23,7 +23,7 @@ import jakarta.ws.rs.core.Response.Status;
 public class FirebaseUserService extends AbstractService {
 
     @Inject
-    public Logger log;
+    Logger log;
 
     public UserRecord createUserInFirebase(CreateUserDto createUserDto) {
 
