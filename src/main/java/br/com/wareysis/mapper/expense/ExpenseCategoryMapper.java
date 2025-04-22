@@ -1,7 +1,5 @@
 package br.com.wareysis.mapper.expense;
 
-import java.time.LocalDateTime;
-
 import br.com.wareysis.domain.category.CategoryId;
 import br.com.wareysis.domain.expense.ExpenseCategory;
 import br.com.wareysis.dto.category.CategoryDto;
@@ -18,7 +16,6 @@ public class ExpenseCategoryMapper implements GenericCategoryMapper<ExpenseCateg
         ExpenseCategory entity = new ExpenseCategory();
         entity.setId(new CategoryId(dto.userId(), dto.name()));
         entity.setDescription(dto.description());
-        entity.setUpdateTime(LocalDateTime.now());
         return entity;
     }
 
@@ -29,7 +26,9 @@ public class ExpenseCategoryMapper implements GenericCategoryMapper<ExpenseCateg
         return new CategoryDto(
                 id.getUserId(),
                 id.getName(),
-                entity.getDescription()
+                entity.getDescription(),
+                entity.getCreateTime(),
+                entity.getUpdateTime()
         );
     }
 

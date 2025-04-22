@@ -1,6 +1,5 @@
 package br.com.wareysis.service.category;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,23 +10,16 @@ import br.com.wareysis.dto.category.CategoryDto;
 import br.com.wareysis.exception.category.CategoryException;
 import br.com.wareysis.mapper.GenericCategoryMapper;
 import br.com.wareysis.repository.AbstractCategoryRepository;
-import br.com.wareysis.service.user.UserService;
 
-import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 public abstract class AbstractCategoryService<T extends AbstractCategory> extends AbstractService {
 
-    @Inject
-    AbstractCategoryRepository<T> repository;
+    protected AbstractCategoryRepository<T> repository;
 
-    @Inject
-    GenericCategoryMapper<T> mapper;
-
-    @Inject
-    UserService userService;
+    protected GenericCategoryMapper<T> mapper;
 
     @Transactional
     public CategoryDto create(CategoryDto dto) {
@@ -35,9 +27,28 @@ public abstract class AbstractCategoryService<T extends AbstractCategory> extend
         validateCreateCategory(new CategoryId(dto.userId(), dto.name()));
 
         T category = mapper.toEntity(dto);
+        repository.persistAndFlush(category);
 
-        repository.persist(category);
-        return dto;
+        return mapper.toDto(category);
+    }
+
+    @Transactional
+    public CategoryDto update(CategoryDto dto) {
+
+        CategoryId categoryId = new CategoryId(dto.userId(), dto.name());
+
+        validateCategory(categoryId);
+
+        T oldCategory = repository.findById(categoryId);
+
+        if (Objects.nonNull(oldCategory)) {
+            oldCategory.setDescription(dto.description());
+        }
+
+        repository.persistAndFlush(oldCategory);
+
+        return mapper.toDto(oldCategory);
+
     }
 
     @Transactional
@@ -47,39 +58,39 @@ public abstract class AbstractCategoryService<T extends AbstractCategory> extend
 
         T category = repository.findById(categoryId);
 
-        repository.delete(category);
-    }
+        if (Objects.nonNull(category)) {
+            repository.delete(category);
 
-    @Transactional
-    public void update(CategoryDto dto) {
-
-        CategoryId categoryId = new CategoryId(dto.userId(), dto.name());
-
-        validateCategory(categoryId);
-
-        T oldCategory = repository.findById(categoryId);
-        oldCategory.setDescription(dto.description());
-        oldCategory.setUpdateTime(LocalDateTime.now());
+        }
 
     }
 
     public List<CategoryDto> findAllByUserId(Long userId) {
 
-        userService.validateUserExists(userId);
+        userService.validateUser(userId);
 
         return repository.findAllByUserId(userId).parallelStream().map(mapper::toDto).toList();
     }
 
     public List<CategoryDto> findAllByName(CategoryId categoryId) {
 
-        userService.validateUserExists(categoryId.getUserId());
+        userService.validateUser(categoryId.getUserId());
 
         return repository.findAllByName(categoryId).parallelStream().map(mapper::toDto).toList();
     }
 
+    public void validateCategory(CategoryId categoryId) {
+
+        userService.validateUser(categoryId.getUserId());
+
+        if (!isCategoryPresent(categoryId)) {
+            throw new CategoryException(messageService.getMessage("category.notFound"), Response.Status.NOT_FOUND);
+        }
+    }
+
     private void validateCreateCategory(CategoryId categoryId) {
 
-        userService.validateUserExists(categoryId.getUserId());
+        userService.validateUser(categoryId.getUserId());
 
         if (isCategoryPresent(categoryId)) {
             throw new CategoryException(messageService.getMessage("category.already.exists", categoryId.getName()), Status.BAD_REQUEST);
@@ -98,15 +109,6 @@ public abstract class AbstractCategoryService<T extends AbstractCategory> extend
         List<T> categoryList = repository.findAllByName(categoryId);
 
         return Objects.nonNull(categoryList) && !categoryList.isEmpty();
-    }
-
-    public void validateCategory(CategoryId categoryId) {
-
-        userService.validateUserExists(categoryId.getUserId());
-
-        if (!isCategoryPresent(categoryId)) {
-            throw new CategoryException(messageService.getMessage("category.notFound"), Response.Status.NOT_FOUND);
-        }
     }
 
 }

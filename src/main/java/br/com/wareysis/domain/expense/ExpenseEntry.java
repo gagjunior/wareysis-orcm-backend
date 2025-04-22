@@ -5,8 +5,11 @@ import java.math.BigDecimal;
 
 import br.com.wareysis.core.domain.AbstractDomainBase;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import jakarta.persistence.Column;
@@ -19,6 +22,9 @@ import jakarta.persistence.Table;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "expense_entry")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ExpenseEntry extends AbstractDomainBase implements Serializable {
 
     @EmbeddedId

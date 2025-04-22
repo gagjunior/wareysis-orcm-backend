@@ -29,7 +29,9 @@ public class IncomeCategoryMapper implements GenericCategoryMapper<IncomeCategor
         return new CategoryDto(
                 id.getUserId(),
                 id.getName(),
-                entity.getDescription()
+                entity.getDescription(),
+                entity.getCreateTime(),
+                entity.getUpdateTime()
         );
     }
 

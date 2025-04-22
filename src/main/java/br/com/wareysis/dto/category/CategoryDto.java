@@ -1,5 +1,7 @@
 package br.com.wareysis.dto.category;
 
+import java.time.LocalDateTime;
+
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -11,7 +13,9 @@ public record CategoryDto(
         Long userId,
         @NotBlank(message = "Name cannot be blank")
         String name,
-        String description
+        String description,
+        LocalDateTime createTime,
+        LocalDateTime updateTime
 ) {
 
 }

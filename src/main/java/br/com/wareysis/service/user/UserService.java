@@ -51,7 +51,7 @@ public class UserService extends AbstractService {
     public User updateUser(Long userId, UpdateUserDto updateUserDto) {
 
         if (userId == 1L) {
-            throw new UserException(messageService.getMessage("user.update.admin.not.allowed"), Status.BAD_REQUEST);
+            throw new UserException(messageService.getMessage("user.admin.not.allowed"), Status.BAD_REQUEST);
         }
 
         if (Objects.isNull(updateUserDto) || userId <= 0) {
@@ -67,7 +67,21 @@ public class UserService extends AbstractService {
 
     }
 
-    public void validateUserExists(Long userId) {
+    public void validateUser(Long userId) {
+
+        checkIsUserAdminDefault(userId);
+        validateUserExists(userId);
+
+    }
+
+    private void checkIsUserAdminDefault(Long userId) {
+
+        if (userId == 1L) {
+            throw new UserException(messageService.getMessage("user.admin.not.allowed"), Status.BAD_REQUEST);
+        }
+    }
+
+    private void validateUserExists(Long userId) {
 
         getUserOrThrow(userId);
 

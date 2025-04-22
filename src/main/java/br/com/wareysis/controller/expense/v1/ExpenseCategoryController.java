@@ -27,12 +27,18 @@ import jakarta.ws.rs.core.MediaType;
 public class ExpenseCategoryController {
 
     @Inject
-    ExpenseCategoryService categoryService;
+    ExpenseCategoryService service;
 
     @POST
     public RestResponse<CategoryDto> create(@Valid CategoryDto categoryDto) {
 
-        return RestResponse.status(Status.CREATED, categoryService.create(categoryDto));
+        return RestResponse.status(Status.CREATED, service.create(categoryDto));
+    }
+
+    @PUT
+    public RestResponse<CategoryDto> update(@Valid CategoryDto categoryDto) {
+
+        return RestResponse.ok(service.update(categoryDto));
     }
 
     @DELETE
@@ -41,15 +47,8 @@ public class ExpenseCategoryController {
 
         CategoryId categoryId = new CategoryId(userId, name);
 
-        categoryService.delete(categoryId);
+        service.delete(categoryId);
 
-        return RestResponse.status(Status.NO_CONTENT);
-    }
-
-    @PUT
-    public RestResponse<Void> update(@Valid CategoryDto categoryDto) {
-
-        categoryService.update(categoryDto);
         return RestResponse.status(Status.NO_CONTENT);
     }
 
@@ -57,14 +56,14 @@ public class ExpenseCategoryController {
     @Path("/{userId}")
     public RestResponse<List<CategoryDto>> findAllCategories(@PathParam("userId") Long userId) {
 
-        return RestResponse.status(Status.OK, categoryService.findAllByUserId(userId));
+        return RestResponse.ok(service.findAllByUserId(userId));
     }
 
     @GET
     @Path("/{userId}/{name}")
     public RestResponse<List<CategoryDto>> findAllByName(@PathParam("userId") Long userId, @PathParam("name") String name) {
 
-        return RestResponse.status(Status.OK, categoryService.findAllByName(new CategoryId(userId, name)));
+        return RestResponse.ok(service.findAllByName(new CategoryId(userId, name)));
 
     }
 
