@@ -1,5 +1,6 @@
 package br.com.wareysis.service.expense;
 
+import java.util.List;
 import java.util.Objects;
 
 import br.com.wareysis.core.service.AbstractService;
@@ -7,6 +8,7 @@ import br.com.wareysis.domain.category.CategoryId;
 import br.com.wareysis.domain.expense.ExpenseEntry;
 import br.com.wareysis.domain.expense.ExpenseEntryId;
 import br.com.wareysis.dto.expense.ExpenseEntryDto;
+import br.com.wareysis.dto.expense.ExpenseEntryFilterDto;
 import br.com.wareysis.exception.expense.ExpenseException;
 import br.com.wareysis.mapper.expense.ExpenseEntryMapper;
 import br.com.wareysis.repository.expense.ExpenseEntryRepository;
@@ -38,7 +40,7 @@ public class ExpenseEntryService extends AbstractService {
         Long nextId = repository.nextValSequence();
         ExpenseEntry expenseEntry = mapper.toEntity(dto, nextId);
 
-        repository.persist(expenseEntry);
+        repository.persistAndFlush(expenseEntry);
 
         return mapper.toDto(expenseEntry);
     }
@@ -77,6 +79,16 @@ public class ExpenseEntryService extends AbstractService {
 
         repository.delete(expenseEntry);
 
+    }
+
+    public List<ExpenseEntryDto> findAllByUserId(Long userId) {
+
+        return repository.findAllByUserId(userId).parallelStream().map(mapper::toDto).toList();
+    }
+
+    public List<ExpenseEntryDto> findByFilter(ExpenseEntryFilterDto filterDto) {
+
+        return repository.findByFilter(filterDto).parallelStream().map(mapper::toDto).toList();
     }
 
 }

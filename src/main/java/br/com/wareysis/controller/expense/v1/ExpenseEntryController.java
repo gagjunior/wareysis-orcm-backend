@@ -1,18 +1,23 @@
 package br.com.wareysis.controller.expense.v1;
 
+import java.util.List;
+
 import org.jboss.resteasy.reactive.RestResponse;
 
 import br.com.wareysis.domain.expense.ExpenseEntryId;
 import br.com.wareysis.dto.expense.ExpenseEntryDto;
+import br.com.wareysis.dto.expense.ExpenseEntryFilterDto;
 import br.com.wareysis.service.expense.ExpenseEntryService;
 
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response.Status;
@@ -43,6 +48,19 @@ public class ExpenseEntryController {
         service.delete(id);
 
         return RestResponse.status(Status.NO_CONTENT);
+    }
+
+    @GET
+    @Path("/{userId}")
+    public RestResponse<List<ExpenseEntryDto>> findAllByUserId(@PathParam("userId") Long userId) {
+
+        return RestResponse.ok(service.findAllByUserId(userId));
+    }
+
+    @POST
+    @Path("/filter")
+    public RestResponse<List<ExpenseEntryDto>> findByFilter(@Valid ExpenseEntryFilterDto filter) {
+        return RestResponse.ok(service.findByFilter(filter));
     }
 
 }
