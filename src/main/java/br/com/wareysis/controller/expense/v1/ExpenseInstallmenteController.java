@@ -7,6 +7,7 @@ import br.com.wareysis.dto.expense.ExpenseInstallmentDto;
 import br.com.wareysis.service.expense.ExpenseInstallmentService;
 
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -22,9 +23,9 @@ public class ExpenseInstallmenteController {
     ExpenseInstallmentService service;
 
     @POST
-    public RestResponse<ExpenseInstallmentDto> create(ExpenseInstallmentDto expenseInstallmentDto) {
+    public RestResponse<ExpenseInstallmentDto> create(@Valid ExpenseInstallmentDto installmentDto) {
 
-        return RestResponse.status(Status.CREATED, service.create(expenseInstallmentDto));
+        return RestResponse.status(Status.CREATED, service.create(installmentDto));
     }
 
 }

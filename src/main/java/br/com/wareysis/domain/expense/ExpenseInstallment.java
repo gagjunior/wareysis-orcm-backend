@@ -35,7 +35,7 @@ public class ExpenseInstallment extends AbstractDomainBase implements Serializab
     public Long entryId;
 
     @Column(name = "USER_ID", nullable = false)
-    public Integer userId;
+    public Long userId;
 
     @Column(name = "ENTRY_DATE", nullable = false)
     public LocalDate entryDate;
@@ -46,6 +46,7 @@ public class ExpenseInstallment extends AbstractDomainBase implements Serializab
     @Column(name = "STATUS_TYPE", nullable = false)
     public Integer statusType;
 
+    @Builder.Default
     @Column(name = "AMOUNT_PAID", nullable = false)
     public BigDecimal amountPaid = BigDecimal.ZERO;
 
