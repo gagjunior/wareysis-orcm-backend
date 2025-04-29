@@ -1,6 +1,7 @@
 package br.com.wareysis.repository.expense;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -18,11 +19,11 @@ public class ExpenseInstallmentRepository implements PanacheRepositoryBase<Expen
 
     public List<ExpenseInstallment> findAllByExpenseEntryId(ExpenseEntryId expenseEntryId) {
 
-        return list("entryId = :entry_id_param AND userId = :user_id_param AND entryDate = :entry_date_param",
-                Parameters.with("entry_id_param", expenseEntryId.getId())
-                        .and("user_id_param", expenseEntryId.getUserId())
-                        .and("entry_date_param", expenseEntryId.getEntryDate())
-        );
+        return list("entryId = :entryId AND userId = :userId AND entryDate = :entryDate ORDER BY id.dueDate", Map.of(
+                "entryId", expenseEntryId.getId(),
+                "userId", expenseEntryId.getUserId(),
+                "entryDate", expenseEntryId.getEntryDate()
+        ));
     }
 
     public Optional<ExpenseInstallment> findByUUID(UUID uuid) {

@@ -1,6 +1,7 @@
 package br.com.wareysis.service.expense;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,8 +38,7 @@ public class ExpenseInstallmentService extends AbstractService {
         userService.validateUser(installmentDto.userId());
 
         // Verificar se despesa existe
-        ExpenseEntryId expenseEntryId = new ExpenseEntryId(installmentDto.entryId(), installmentDto.userId(), installmentDto.entryDate());
-        expenseEntryService.validateExpenseEntryExists(expenseEntryId);
+        getExpenseEntryId(installmentDto.entryId(), installmentDto.userId(), installmentDto.entryDate());
 
         List<ExpenseInstallment> expenseInstallmentList = mapper.toEntity(installmentDto);
 
@@ -58,8 +58,7 @@ public class ExpenseInstallmentService extends AbstractService {
         userService.validateUser(installmentDto.userId());
 
         // Verificar se despesa existe
-        ExpenseEntryId expenseEntryId = new ExpenseEntryId(installmentDto.entryId(), installmentDto.userId(), installmentDto.entryDate());
-        expenseEntryService.validateExpenseEntryExists(expenseEntryId);
+        ExpenseEntryId expenseEntryId = getExpenseEntryId(installmentDto.entryId(), installmentDto.userId(), installmentDto.entryDate());
 
         installmentDto.installmentList().forEach(installmentDetails -> {
             ExpenseInstallment installment = findByUUID(installmentDetails.uuid());
@@ -80,8 +79,7 @@ public class ExpenseInstallmentService extends AbstractService {
         userService.validateUser(installmentDto.userId());
 
         // Verificar se despesa existe
-        ExpenseEntryId expenseEntryId = new ExpenseEntryId(installmentDto.entryId(), installmentDto.userId(), installmentDto.entryDate());
-        expenseEntryService.validateExpenseEntryExists(expenseEntryId);
+        getExpenseEntryId(installmentDto.entryId(), installmentDto.userId(), installmentDto.entryDate());
 
         installmentDto.installmentList().forEach(installmentDetails -> {
             ExpenseInstallment installment = findByUUID(installmentDetails.uuid());
@@ -93,10 +91,27 @@ public class ExpenseInstallmentService extends AbstractService {
 
     }
 
+    public ExpenseInstallmentDto findAllByExpenseEntryId(Long entryId, Long userId, LocalDate entryDate) {
+
+        ExpenseEntryId expenseEntryId = getExpenseEntryId(entryId, userId, entryDate);
+
+        return mapper.toDto(repository.findAllByExpenseEntryId(expenseEntryId));
+
+    }
+
     public ExpenseInstallment findByUUID(UUID uuid) {
 
         return repository.findByUUID(uuid)
                 .orElseThrow(() -> new ExpenseInstallmentException(messageService.getMessage("expense.installment.not.found", uuid), Status.BAD_REQUEST));
+    }
+
+    private ExpenseEntryId getExpenseEntryId(Long entryId, Long userId, LocalDate entryDate) {
+
+        ExpenseEntryId expenseEntryId = new ExpenseEntryId(entryId, userId, entryDate);
+        expenseEntryService.validateExpenseEntryExists(expenseEntryId);
+
+        return expenseEntryId;
+
     }
 
     private void updateInstallmentDetails(ExpenseInstallment installment, ExpenseInstallmentDetailsDto installmentDetails) {
