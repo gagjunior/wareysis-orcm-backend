@@ -19,14 +19,26 @@ public record ExpenseEntryDto(
         LocalDate entryDate,
 
         String categoryName,
+
         String supplierName,
+
         Long entryTypeId,
+
         Long statusTypeId,
+
         Long paymentTypeId,
+
         Long paymentMethodId,
+
+        @NotNull(message = "Payment date cannot be null")
+        LocalDate paymentDate,
+
         BigDecimal totalValue,
+
         String description,
+
         LocalDateTime createTime,
+
         LocalDateTime updateTime
 
 ) {

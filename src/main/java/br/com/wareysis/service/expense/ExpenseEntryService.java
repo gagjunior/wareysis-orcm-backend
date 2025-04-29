@@ -55,8 +55,8 @@ public class ExpenseEntryService extends AbstractService {
         }
 
         ExpenseEntryId id = new ExpenseEntryId(dto.id(), dto.userId(), dto.entryDate());
-        ExpenseEntry expenseEntry = repository.findByIdOptional(id)
-                .orElseThrow(() -> new ExpenseException(messageService.getMessage(EXPENSE_ID_NOT_EXISTS, id), Status.BAD_REQUEST));
+
+        ExpenseEntry expenseEntry = validateExpenseEntryExists(id);
 
         mapper.updateFromDto(dto, expenseEntry);
 
@@ -74,8 +74,7 @@ public class ExpenseEntryService extends AbstractService {
             throw new ExpenseException(messageService.getMessage(EXPENSE_ID_NOT_EXISTS, id.getId()), Status.BAD_REQUEST);
         }
 
-        ExpenseEntry expenseEntry = repository.findByIdOptional(id)
-                .orElseThrow(() -> new ExpenseException(messageService.getMessage(EXPENSE_ID_NOT_EXISTS, id), Status.BAD_REQUEST));
+        ExpenseEntry expenseEntry = validateExpenseEntryExists(id);
 
         repository.delete(expenseEntry);
 
@@ -89,6 +88,13 @@ public class ExpenseEntryService extends AbstractService {
     public List<ExpenseEntryDto> findByFilter(ExpenseEntryFilterDto filterDto) {
 
         return repository.findByFilter(filterDto).parallelStream().map(mapper::toDto).toList();
+    }
+
+    public ExpenseEntry validateExpenseEntryExists(ExpenseEntryId id) {
+
+        return repository.findByIdOptional(id)
+                .orElseThrow(() -> new ExpenseException(messageService.getMessage(EXPENSE_ID_NOT_EXISTS, id), Status.BAD_REQUEST));
+
     }
 
 }

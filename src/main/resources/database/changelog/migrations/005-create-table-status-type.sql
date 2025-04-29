@@ -15,13 +15,16 @@ ALTER TABLE STATUS_TYPE
 ADD CONSTRAINT UQ_STATUS_TYPE_NAME UNIQUE (NAME);
 
 INSERT INTO STATUS_TYPE (NAME, DESCRIPTION)
-VALUES ('Pago', 'Despesa e/ou Receita paga');
-
-INSERT INTO STATUS_TYPE (NAME, DESCRIPTION)
 VALUES ('Em Aberto', 'Despesa e/ou Receita com valor em aberto');
 
 INSERT INTO STATUS_TYPE (NAME, DESCRIPTION)
 VALUES ('Em Andamento', 'Despesa e/ou Receita em andamento');
 
 INSERT INTO STATUS_TYPE (NAME, DESCRIPTION)
+VALUES ('Pago', 'Despesa e/ou Receita paga');
+
+INSERT INTO STATUS_TYPE (NAME, DESCRIPTION)
 VALUES ('Finalizado', 'Despesa e/ou Receita finalizada');
+
+INSERT INTO STATUS_TYPE (NAME, DESCRIPTION)
+VALUES ('Cancelado', 'Despesa e/ou Receita cancelada');

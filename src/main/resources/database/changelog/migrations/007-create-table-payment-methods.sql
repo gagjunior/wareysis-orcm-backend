@@ -21,6 +21,9 @@ INSERT INTO PAYMENT_METHODS (NAME, DESCRIPTION)
 VALUES ('Cartão de Crédito', 'Despesa e/ou Receita paga com cartão de crédito');
 
 INSERT INTO PAYMENT_METHODS (NAME, DESCRIPTION)
+VALUES ('Cartão de Débito', 'Despesa e/ou Receita paga com cartão de débito');
+
+INSERT INTO PAYMENT_METHODS (NAME, DESCRIPTION)
 VALUES ('Boleto', 'Despesa e/ou Receita paga com boleto');
 
 INSERT INTO PAYMENT_METHODS (NAME, DESCRIPTION)

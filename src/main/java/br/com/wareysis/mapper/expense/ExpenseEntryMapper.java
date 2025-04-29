@@ -26,6 +26,7 @@ public class ExpenseEntryMapper {
                 .statusTypeId(dto.statusTypeId())
                 .paymentTypeId(dto.paymentTypeId())
                 .paymentMethodId(dto.paymentMethodId())
+                .paymentDate(dto.paymentDate())
                 .totalValue(dto.totalValue())
                 .description(dto.description())
                 .build();
@@ -43,6 +44,7 @@ public class ExpenseEntryMapper {
                 entity.getStatusTypeId(),
                 entity.getPaymentTypeId(),
                 entity.getPaymentMethodId(),
+                entity.getPaymentDate(),
                 entity.getTotalValue(),
                 entity.getDescription(),
                 entity.getCreateTime(),

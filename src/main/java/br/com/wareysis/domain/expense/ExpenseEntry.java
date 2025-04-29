@@ -2,6 +2,7 @@ package br.com.wareysis.domain.expense;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import br.com.wareysis.core.domain.AbstractDomainBase;
 
@@ -47,6 +48,9 @@ public class ExpenseEntry extends AbstractDomainBase implements Serializable {
 
     @Column(name = "payment_method_id")
     private Long paymentMethodId;
+
+    @Column(name = "payment_date")
+    private LocalDate paymentDate;
 
     @Column(name = "total_value")
     private BigDecimal totalValue;
