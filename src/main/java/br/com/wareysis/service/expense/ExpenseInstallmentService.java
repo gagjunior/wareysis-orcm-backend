@@ -73,6 +73,26 @@ public class ExpenseInstallmentService extends AbstractService {
 
     }
 
+    @Transactional
+    public void delete(ExpenseInstallmentDto installmentDto) {
+
+        // Verificar usuário existe
+        userService.validateUser(installmentDto.userId());
+
+        // Verificar se despesa existe
+        ExpenseEntryId expenseEntryId = new ExpenseEntryId(installmentDto.entryId(), installmentDto.userId(), installmentDto.entryDate());
+        expenseEntryService.validateExpenseEntryExists(expenseEntryId);
+
+        installmentDto.installmentList().forEach(installmentDetails -> {
+            ExpenseInstallment installment = findByUUID(installmentDetails.uuid());
+            repository.delete(installment);
+
+        });
+
+        repository.flush();
+
+    }
+
     public ExpenseInstallment findByUUID(UUID uuid) {
 
         return repository.findByUUID(uuid)

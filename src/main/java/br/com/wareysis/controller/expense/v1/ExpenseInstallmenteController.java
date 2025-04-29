@@ -9,6 +9,7 @@ import br.com.wareysis.service.expense.ExpenseInstallmentService;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
@@ -33,6 +34,14 @@ public class ExpenseInstallmenteController {
     public RestResponse<ExpenseInstallmentDto> update(@Valid ExpenseInstallmentDto installmentDto) {
 
         return RestResponse.status(Status.OK, service.update(installmentDto));
+    }
+
+    @DELETE
+    public RestResponse<Void> delete(@Valid ExpenseInstallmentDto installmentDto) {
+
+        service.delete(installmentDto);
+
+        return RestResponse.status(Status.NO_CONTENT);
     }
 
 }
