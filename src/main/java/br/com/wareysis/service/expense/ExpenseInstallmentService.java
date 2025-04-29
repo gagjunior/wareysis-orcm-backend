@@ -7,7 +7,6 @@ import java.util.UUID;
 import br.com.wareysis.core.service.AbstractService;
 import br.com.wareysis.domain.expense.ExpenseEntryId;
 import br.com.wareysis.domain.expense.ExpenseInstallment;
-import br.com.wareysis.domain.expense.ExpenseInstallmentId;
 import br.com.wareysis.dto.expense.ExpenseInstallmentDetailsDto;
 import br.com.wareysis.dto.expense.ExpenseInstallmentDto;
 import br.com.wareysis.exception.expense.ExpenseInstallmentException;
@@ -62,32 +61,22 @@ public class ExpenseInstallmentService extends AbstractService {
         ExpenseEntryId expenseEntryId = new ExpenseEntryId(installmentDto.entryId(), installmentDto.userId(), installmentDto.entryDate());
         expenseEntryService.validateExpenseEntryExists(expenseEntryId);
 
-        // Verificar se parcelas existem
-        installmentDto.installmentList()
-                .parallelStream()
-                .forEach(installment -> validateInstallmentExists(new ExpenseInstallmentId(installment.uuid(), installment.dueDate())));
-
         installmentDto.installmentList().forEach(installmentDetails -> {
-            ExpenseInstallment installment = repository.findById(new ExpenseInstallmentId(installmentDetails.uuid(), installmentDetails.dueDate()));
+            ExpenseInstallment installment = findByUUID(installmentDetails.uuid());
             updateInstallmentDetails(installment, installmentDetails);
-            repository.persist(installment);
 
         });
 
-        return installmentDto;
+        repository.flush();
+
+        return mapper.toDto(repository.findAllByExpenseEntryId(expenseEntryId).stream().toList());
 
     }
 
-    public List<ExpenseInstallmentDto> findAllByExpenseEntryId(ExpenseEntryId expenseEntryId) {
+    public ExpenseInstallment findByUUID(UUID uuid) {
 
-        return null;
-
-    }
-
-    public void validateInstallmentExists(ExpenseInstallmentId id) {
-
-        repository.findByIdOptional(id).orElseThrow(() -> new ExpenseInstallmentException("Parcelas não existem", Status.BAD_REQUEST));
-
+        return repository.findByUUID(uuid)
+                .orElseThrow(() -> new ExpenseInstallmentException(messageService.getMessage("expense.installment.not.found", uuid), Status.BAD_REQUEST));
     }
 
     private void updateInstallmentDetails(ExpenseInstallment installment, ExpenseInstallmentDetailsDto installmentDetails) {
@@ -95,13 +84,13 @@ public class ExpenseInstallmentService extends AbstractService {
         if (installmentDetails.amount() != null) {
             installment.setAmount(installmentDetails.amount());
         }
-        if (installmentDetails.amountPaid() != null) {
-
-            installment.setAmountPaid(installmentDetails.amountPaid());
-        }
         if (installmentDetails.statusType() != null) {
 
             installment.setStatusType(installmentDetails.statusType());
+        }
+        if (installmentDetails.amountPaid() != null) {
+
+            installment.setAmountPaid(installmentDetails.amountPaid());
         }
 
     }

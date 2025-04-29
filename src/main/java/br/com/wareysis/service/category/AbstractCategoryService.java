@@ -27,7 +27,7 @@ public abstract class AbstractCategoryService<T extends AbstractCategory> extend
         validateCreateCategory(new CategoryId(dto.userId(), dto.name()));
 
         T category = mapper.toEntity(dto);
-        repository.persistAndFlush(category);
+        repository.persist(category);
 
         return mapper.toDto(category);
     }
@@ -45,7 +45,7 @@ public abstract class AbstractCategoryService<T extends AbstractCategory> extend
             oldCategory.setDescription(dto.description());
         }
 
-        repository.persistAndFlush(oldCategory);
+        repository.flush();
 
         return mapper.toDto(oldCategory);
 

@@ -40,7 +40,7 @@ public class ExpenseEntryService extends AbstractService {
         Long nextId = repository.nextValSequence();
         ExpenseEntry expenseEntry = mapper.toEntity(dto, nextId);
 
-        repository.persistAndFlush(expenseEntry);
+        repository.persist(expenseEntry);
 
         return mapper.toDto(expenseEntry);
     }
@@ -60,7 +60,7 @@ public class ExpenseEntryService extends AbstractService {
 
         mapper.updateFromDto(dto, expenseEntry);
 
-        repository.persistAndFlush(expenseEntry);
+        repository.flush();
 
         return mapper.toDto(expenseEntry);
 

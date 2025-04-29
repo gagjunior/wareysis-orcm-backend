@@ -1,6 +1,8 @@
 package br.com.wareysis.repository.expense;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import br.com.wareysis.domain.expense.ExpenseEntryId;
 import br.com.wareysis.domain.expense.ExpenseInstallment;
@@ -21,6 +23,11 @@ public class ExpenseInstallmentRepository implements PanacheRepositoryBase<Expen
                         .and("user_id_param", expenseEntryId.getUserId())
                         .and("entry_date_param", expenseEntryId.getEntryDate())
         );
+    }
+
+    public Optional<ExpenseInstallment> findByUUID(UUID uuid) {
+
+        return find("id.id = :uuid_param", Parameters.with("uuid_param", uuid)).singleResultOptional();
     }
 
 }

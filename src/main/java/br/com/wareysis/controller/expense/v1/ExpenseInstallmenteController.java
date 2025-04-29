@@ -10,6 +10,7 @@ import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
@@ -26,6 +27,12 @@ public class ExpenseInstallmenteController {
     public RestResponse<ExpenseInstallmentDto> create(@Valid ExpenseInstallmentDto installmentDto) {
 
         return RestResponse.status(Status.CREATED, service.create(installmentDto));
+    }
+
+    @PUT
+    public RestResponse<ExpenseInstallmentDto> update(@Valid ExpenseInstallmentDto installmentDto) {
+
+        return RestResponse.status(Status.OK, service.update(installmentDto));
     }
 
 }
