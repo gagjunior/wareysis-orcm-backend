@@ -24,7 +24,7 @@ import io.quarkus.runtime.Startup;
 public class FirebaseConfig extends AbstractService {
 
     @Inject
-    public Logger log;
+    Logger log;
 
     @ConfigProperty(name = "firebase.service.account.file-path")
     String serviceAccountPath;

@@ -5,6 +5,8 @@ import java.util.List;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.RestResponse.Status;
 
+import com.google.firebase.auth.FirebaseToken;
+
 import br.com.wareysis.domain.category.CategoryId;
 import br.com.wareysis.dto.category.CategoryDto;
 import br.com.wareysis.service.expense.ExpenseCategoryService;
@@ -19,6 +21,8 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 
 @Path("/v1/expense/category")
@@ -54,8 +58,9 @@ public class ExpenseCategoryController {
 
     @GET
     @Path("/{userId}")
-    public RestResponse<List<CategoryDto>> findAllCategories(@PathParam("userId") Long userId) {
+    public RestResponse<List<CategoryDto>> findAllCategories(@PathParam("userId") Long userId, @Context ContainerRequestContext ctx) {
 
+        String userUid = getUserUidFirebase(ctx);
         return RestResponse.ok(service.findAllByUserId(userId));
     }
 
@@ -65,6 +70,12 @@ public class ExpenseCategoryController {
 
         return RestResponse.ok(service.findAllByName(new CategoryId(userId, name)));
 
+    }
+
+    private String getUserUidFirebase(ContainerRequestContext ctx) {
+
+        FirebaseToken user = (FirebaseToken) ctx.getProperty("firebaseUser");
+        return user.getUid();
     }
 
 }
