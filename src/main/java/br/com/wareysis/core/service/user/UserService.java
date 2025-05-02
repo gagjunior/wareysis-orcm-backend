@@ -1,4 +1,4 @@
-package br.com.wareysis.service.user;
+package br.com.wareysis.core.service.user;
 
 import java.util.Objects;
 
@@ -11,7 +11,6 @@ import br.com.wareysis.dto.user.UpdateUserDto;
 import br.com.wareysis.exception.user.UserException;
 import br.com.wareysis.mapper.user.UserMapper;
 import br.com.wareysis.repository.user.UserRepository;
-import br.com.wareysis.service.firebase.user.FirebaseUserService;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;

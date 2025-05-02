@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import br.com.wareysis.core.service.AbstractService;
+import br.com.wareysis.core.service.user.UserService;
 import br.com.wareysis.domain.expense.ExpenseEntryId;
 import br.com.wareysis.domain.expense.ExpenseInstallment;
 import br.com.wareysis.dto.expense.ExpenseInstallmentDetailsDto;
@@ -30,6 +31,9 @@ public class ExpenseInstallmentService extends AbstractService {
 
     @Inject
     ExpenseInstallmentMapper mapper;
+
+    @Inject
+    UserService userService;
 
     @Transactional
     public ExpenseInstallmentDto create(ExpenseInstallmentDto installmentDto) {

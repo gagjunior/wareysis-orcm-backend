@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 import br.com.wareysis.core.service.AbstractService;
+import br.com.wareysis.core.service.user.UserService;
 import br.com.wareysis.domain.category.CategoryId;
 import br.com.wareysis.domain.expense.ExpenseEntry;
 import br.com.wareysis.domain.expense.ExpenseEntryId;
@@ -29,6 +30,9 @@ public class ExpenseEntryService extends AbstractService {
 
     @Inject
     ExpenseCategoryService categoryService;
+
+    @Inject
+    UserService userService;
 
     private static final String EXPENSE_ID_NOT_EXISTS = "expense.id.not.exists";
 

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 import br.com.wareysis.core.service.AbstractService;
+import br.com.wareysis.core.service.user.UserService;
 import br.com.wareysis.domain.category.AbstractCategory;
 import br.com.wareysis.domain.category.CategoryId;
 import br.com.wareysis.dto.category.CategoryDto;
@@ -11,11 +12,15 @@ import br.com.wareysis.exception.category.CategoryException;
 import br.com.wareysis.mapper.GenericCategoryMapper;
 import br.com.wareysis.repository.AbstractCategoryRepository;
 
+import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 public abstract class AbstractCategoryService<T extends AbstractCategory> extends AbstractService {
+
+    @Inject
+    UserService userService;
 
     protected AbstractCategoryRepository<T> repository;
 

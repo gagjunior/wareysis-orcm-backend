@@ -1,4 +1,4 @@
-package br.com.wareysis.service.firebase.user;
+package br.com.wareysis.core.service.user;
 
 import java.util.Objects;
 

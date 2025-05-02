@@ -6,7 +6,7 @@ import org.jboss.resteasy.reactive.RestResponse.Status;
 import br.com.wareysis.domain.user.User;
 import br.com.wareysis.dto.user.CreateUserDto;
 import br.com.wareysis.dto.user.UpdateUserDto;
-import br.com.wareysis.service.user.UserService;
+import br.com.wareysis.core.service.user.UserService;
 
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
