@@ -7,6 +7,7 @@ import br.com.wareysis.core.service.AbstractService;
 import br.com.wareysis.core.service.user.UserService;
 import br.com.wareysis.domain.category.AbstractCategory;
 import br.com.wareysis.domain.category.CategoryId;
+import br.com.wareysis.domain.user.User;
 import br.com.wareysis.dto.category.CategoryDto;
 import br.com.wareysis.exception.category.CategoryException;
 import br.com.wareysis.mapper.GenericCategoryMapper;
@@ -14,6 +15,7 @@ import br.com.wareysis.repository.AbstractCategoryRepository;
 
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -27,9 +29,11 @@ public abstract class AbstractCategoryService<T extends AbstractCategory> extend
     protected GenericCategoryMapper<T> mapper;
 
     @Transactional
-    public CategoryDto create(CategoryDto dto) {
+    public CategoryDto create(CategoryDto dto, ContainerRequestContext ctx) {
 
-        validateCreateCategory(new CategoryId(dto.userId(), dto.name()));
+        User user = userService.findUserByContext(ctx);
+
+        validateCreateCategory(new CategoryId(user.getId(), dto.name()));
 
         T category = mapper.toEntity(dto);
         repository.persist(category);
@@ -38,9 +42,11 @@ public abstract class AbstractCategoryService<T extends AbstractCategory> extend
     }
 
     @Transactional
-    public CategoryDto update(CategoryDto dto) {
+    public CategoryDto update(CategoryDto dto, ContainerRequestContext ctx) {
 
-        CategoryId categoryId = new CategoryId(dto.userId(), dto.name());
+        User user = userService.findUserByContext(ctx);
+
+        CategoryId categoryId = new CategoryId(user.getId(), dto.name());
 
         validateCategory(categoryId);
 
@@ -57,7 +63,11 @@ public abstract class AbstractCategoryService<T extends AbstractCategory> extend
     }
 
     @Transactional
-    public void delete(CategoryId categoryId) {
+    public void delete(String name, ContainerRequestContext ctx) {
+
+        User user = userService.findUserByContext(ctx);
+
+        CategoryId categoryId = new CategoryId(user.getId(), name);
 
         validateCategory(categoryId);
 
@@ -70,14 +80,20 @@ public abstract class AbstractCategoryService<T extends AbstractCategory> extend
 
     }
 
-    public List<CategoryDto> findAllByUserId(Long userId) {
+    public List<CategoryDto> findAllByUserId(ContainerRequestContext ctx) {
 
-        userService.validateUser(userId);
+        User user = userService.findUserByContext(ctx);
 
-        return repository.findAllByUserId(userId).parallelStream().map(mapper::toDto).toList();
+        userService.validateUser(user.getId());
+
+        return repository.findAllByUserId(user.getId()).parallelStream().map(mapper::toDto).toList();
     }
 
-    public List<CategoryDto> findAllByName(CategoryId categoryId) {
+    public List<CategoryDto> findAllByName(String name, ContainerRequestContext ctx) {
+
+        User user = userService.findUserByContext(ctx);
+
+        CategoryId categoryId = new CategoryId(user.getId(), name);
 
         userService.validateUser(categoryId.getUserId());
 

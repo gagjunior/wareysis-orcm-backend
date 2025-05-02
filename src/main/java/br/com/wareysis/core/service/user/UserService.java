@@ -4,17 +4,18 @@ import java.util.Objects;
 
 import com.google.firebase.auth.UserRecord;
 
+import br.com.wareysis.core.repository.user.UserRepository;
 import br.com.wareysis.core.service.AbstractService;
 import br.com.wareysis.domain.user.User;
 import br.com.wareysis.dto.user.CreateUserDto;
 import br.com.wareysis.dto.user.UpdateUserDto;
 import br.com.wareysis.exception.user.UserException;
 import br.com.wareysis.mapper.user.UserMapper;
-import br.com.wareysis.repository.user.UserRepository;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -71,6 +72,16 @@ public class UserService extends AbstractService {
         checkIsUserAdminDefault(userId);
         validateUserExists(userId);
 
+    }
+
+    public User findUserByContext(ContainerRequestContext ctx) {
+
+        return findUserByFirebaseUid(firebaseUserService.getFirebaseToken(ctx).getUid());
+    }
+
+    private User findUserByFirebaseUid(String firebaseUid) {
+
+        return userRepository.findUserByFirebaseUid(firebaseUid);
     }
 
     private void checkIsUserAdminDefault(Long userId) {

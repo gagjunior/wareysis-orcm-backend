@@ -7,6 +7,7 @@ import org.jboss.logging.Logger;
 import com.google.firebase.auth.AuthErrorCode;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseToken;
 import com.google.firebase.auth.UserRecord;
 
 import br.com.wareysis.core.service.AbstractService;
@@ -16,6 +17,7 @@ import br.com.wareysis.exception.user.UserException;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -62,6 +64,12 @@ public class FirebaseUserService extends AbstractService {
 
             throw new UserException(e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR);
         }
+
+    }
+
+    public FirebaseToken getFirebaseToken(ContainerRequestContext ctx) {
+
+        return (FirebaseToken) ctx.getProperty("firebaseUser");
 
     }
 

@@ -5,9 +5,6 @@ import java.util.List;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.RestResponse.Status;
 
-import com.google.firebase.auth.FirebaseToken;
-
-import br.com.wareysis.domain.category.CategoryId;
 import br.com.wareysis.dto.category.CategoryDto;
 import br.com.wareysis.service.expense.ExpenseCategoryService;
 
@@ -34,48 +31,38 @@ public class ExpenseCategoryController {
     ExpenseCategoryService service;
 
     @POST
-    public RestResponse<CategoryDto> create(@Valid CategoryDto categoryDto) {
+    public RestResponse<CategoryDto> create(@Valid CategoryDto categoryDto, @Context ContainerRequestContext ctx) {
 
-        return RestResponse.status(Status.CREATED, service.create(categoryDto));
+        return RestResponse.status(Status.CREATED, service.create(categoryDto, ctx));
     }
 
     @PUT
-    public RestResponse<CategoryDto> update(@Valid CategoryDto categoryDto) {
+    public RestResponse<CategoryDto> update(@Valid CategoryDto categoryDto, @Context ContainerRequestContext ctx) {
 
-        return RestResponse.ok(service.update(categoryDto));
+        return RestResponse.ok(service.update(categoryDto, ctx));
     }
 
     @DELETE
-    @Path("/{userId}/{name}")
-    public RestResponse<Void> delete(@PathParam("userId") Long userId, @PathParam("name") String name) {
+    @Path("/{name}")
+    public RestResponse<Void> delete(@PathParam("name") String name, @Context ContainerRequestContext ctx) {
 
-        CategoryId categoryId = new CategoryId(userId, name);
-
-        service.delete(categoryId);
+        service.delete(name, ctx);
 
         return RestResponse.status(Status.NO_CONTENT);
     }
 
     @GET
-    @Path("/{userId}")
-    public RestResponse<List<CategoryDto>> findAllCategories(@PathParam("userId") Long userId, @Context ContainerRequestContext ctx) {
+    public RestResponse<List<CategoryDto>> findAllCategories(@Context ContainerRequestContext ctx) {
 
-        String userUid = getUserUidFirebase(ctx);
-        return RestResponse.ok(service.findAllByUserId(userId));
+        return RestResponse.ok(service.findAllByUserId(ctx));
     }
 
     @GET
-    @Path("/{userId}/{name}")
-    public RestResponse<List<CategoryDto>> findAllByName(@PathParam("userId") Long userId, @PathParam("name") String name) {
+    @Path("/{name}")
+    public RestResponse<List<CategoryDto>> findAllByName(@PathParam("name") String name, @Context ContainerRequestContext ctx) {
 
-        return RestResponse.ok(service.findAllByName(new CategoryId(userId, name)));
+        return RestResponse.ok(service.findAllByName(name, ctx));
 
-    }
-
-    private String getUserUidFirebase(ContainerRequestContext ctx) {
-
-        FirebaseToken user = (FirebaseToken) ctx.getProperty("firebaseUser");
-        return user.getUid();
     }
 
 }
